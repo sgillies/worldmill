@@ -27,8 +27,12 @@ cdef class Workspace:
 
         # start session
         cogr_ds = ograpi.OGROpen(self.path, 0, NULL)
+        
+        # Silence null pointer errors if there are no layers
+        # At some point this should be changed to a custom handler
+        ograpi.CPLSetErrorHandler(ograpi.CPLQuietErrorHandler)
 
-        n = ograpi.OGR_DS_GetLayerCount(cogr_ds)
+        n = ograpi.OGR_DS_GetLayerCount(cogr_ds)        
         for i in range(n):
             cogr_layer = ograpi.OGR_DS_GetLayer(cogr_ds, i)
             cogr_layerdefn = ograpi.OGR_L_GetLayerDefn(cogr_layer)

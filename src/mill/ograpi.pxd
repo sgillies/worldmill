@@ -35,3 +35,6 @@ cdef extern from "ogr_api.h":
     void *  OGROpenShared (char *path, int mode, void *x)
     int  OGRReleaseDataSource (void *datasource)
 
+cdef extern from "cpl_error.h":
+    void    CPLSetErrorHandler (void *handler)
+    void *  CPLQuietErrorHandler
