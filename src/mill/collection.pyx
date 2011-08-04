@@ -18,7 +18,7 @@ cdef class Session:
     cdef void *cogr_ds
     cdef void *cogr_layer
 
-    def __new__(self):
+    def __cinit__(self):
         self.cogr_ds = NULL
         self.cogr_layer = NULL
 
