@@ -34,6 +34,8 @@ cdef extern from "ogr_api.h":
     void *  OGROpen (char *path, int mode, void *x)
     void *  OGROpenShared (char *path, int mode, void *x)
     int  OGRReleaseDataSource (void *datasource)
+    void * OGR_DS_GetDriver (void *layer_defn)
+    char * OGR_Dr_GetName (void *driver)
 
 cdef extern from "cpl_error.h":
     void    CPLSetErrorHandler (void *handler)

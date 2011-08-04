@@ -14,10 +14,14 @@ cdef class Workspace:
     cdef public path
     # Feature collections
     cdef _collections
-
+    
+    # Name of OGR driver used in workspace
+    cdef _format
+    
     def __init__(self, path):
         self.path = path
         self._collections = None
+        self._format = None
 
     def _read_collections(self):
         cdef void * cogr_ds
@@ -40,6 +44,13 @@ cdef class Workspace:
             collection = Collection(layer_name, self)
             collections[layer_name] = collection
         
+        # Explicitly set format to None if workspace has no layers
+        if n == 0:
+            self._format = None
+        else:
+            driver = ograpi.OGR_DS_GetDriver(cogr_ds)
+            self._format = ograpi.OGR_Dr_GetName(driver)
+        
         # end session
         ograpi.OGR_DS_Destroy(cogr_ds)
         
@@ -51,6 +62,12 @@ cdef class Workspace:
             if not self._collections:
                 self._collections = self._read_collections()
             return self._collections
+            
+    property format:
+        def __get__(self):
+            if not self._format:
+                self._read_collections()
+            return self._format
 
     def __getitem__(self, name):
         return self.collections.__getitem__(name)
